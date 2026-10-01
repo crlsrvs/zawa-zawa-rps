@@ -1,0 +1,76 @@
+:root {
+  --bg-dark: #0a0a0c;
+  --bg-surface: #121216;
+  --bg-surface-elevated: #1a1a22;
+  --border-industrial: #2a2a38;
+  --border-active: #4a4a5e;
+  
+  --crimson-alarm: #e60000;
+  --crimson-glow: rgba(230, 0, 0, 0.4);
+  
+  --gold-star: #ffb703;
+  --gold-glow: rgba(255, 183, 3, 0.45);
+  
+  --led-green: #39ff14;
+  --led-green-glow: rgba(57, 255, 20, 0.35);
+  
+  --led-yellow: #ffee00;
+  --led-yellow-glow: rgba(255, 238, 0, 0.35);
+  
+  --card-rock: #ff4d4d;
+  --card-paper: #00d2ff;
+  --card-scissors: #ffe600;
+
+  --text-main: #f0f0f4;
+  --text-muted: #838399;
+  --text-dim: #4e4e60;
+
+  --font-display: 'Teko', sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-body: 'Chakra Petch', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* Atmospheric subtle scanlines & vignette */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.85) 100%),
+    linear-gradient(rgba(18, 18, 22, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+  background-size: 100% 100%, 100% 4px;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--crimson-alarm);
+  outline-offset: 2px;
+}

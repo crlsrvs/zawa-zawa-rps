@@ -1,0 +1,193 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 1.5rem;
+}
+
+.app__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-bottom: 2px solid var(--border-industrial);
+  padding-bottom: 1rem;
+}
+
+.app__branding {
+  display: flex;
+  flex-direction: column;
+}
+
+.app__title {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  line-height: 0.95;
+  color: var(--text-main);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.app__title-accent {
+  color: var(--crimson-alarm);
+  text-shadow: 0 0 15px var(--crimson-glow);
+}
+
+.app__subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+}
+
+.app__config-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-industrial);
+  padding: 0.5rem 0.85rem;
+}
+
+.app__config-label {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.app__config-select {
+  background: var(--bg-surface-elevated);
+  color: var(--text-main);
+  border: 1px solid var(--border-industrial);
+  padding: 0.3rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.app__config-btn {
+  background: var(--bg-dark);
+  border: 1px solid var(--border-industrial);
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.app__config-btn:hover {
+  background: var(--crimson-alarm);
+  border-color: var(--crimson-alarm);
+  color: #fff;
+}
+
+.app__main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 1;
+}
+
+.app__gameover-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 4, 6, 0.92);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1.5rem;
+}
+
+.app__gameover-modal {
+  background: var(--bg-surface);
+  border: 2px solid var(--border-industrial);
+  width: 100%;
+  max-width: 580px;
+  padding: 2.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+}
+
+.app__gameover-modal--qualified {
+  border-color: var(--gold-star);
+  box-shadow: 0 0 35px var(--gold-glow);
+}
+
+.app__gameover-modal--eliminated {
+  border-color: var(--crimson-alarm);
+  box-shadow: 0 0 35px var(--crimson-glow);
+}
+
+.app__gameover-badge {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.app__gameover-badge--qualified {
+  color: var(--gold-star);
+}
+
+.app__gameover-badge--eliminated {
+  color: var(--crimson-alarm);
+}
+
+.app__gameover-title {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  line-height: 1;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.app__gameover-modal--qualified .app__gameover-title {
+  color: var(--gold-star);
+  text-shadow: 0 0 20px var(--gold-glow);
+}
+
+.app__gameover-modal--eliminated .app__gameover-title {
+  color: var(--crimson-alarm);
+  text-shadow: 0 0 20px var(--crimson-glow);
+}
+
+.app__gameover-desc {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--text-main);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.app__gameover-btn {
+  background: var(--crimson-alarm);
+  color: #fff;
+  border: 1px solid var(--crimson-alarm);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.85rem 2rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 20px var(--crimson-glow);
+}
+
+.app__gameover-btn:hover {
+  background: #ff1a1a;
+  transform: translateY(-2px);
+}

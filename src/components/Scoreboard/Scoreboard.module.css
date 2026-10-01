@@ -1,0 +1,152 @@
+.scoreboard {
+  background: var(--bg-surface);
+  border: 2px solid var(--border-industrial);
+  border-top: 4px solid var(--led-yellow);
+  padding: 1.25rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+.scoreboard::after {
+  content: 'ESPOIR LIVE';
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--led-yellow);
+  letter-spacing: 0.15em;
+  opacity: 0.8;
+}
+
+.scoreboard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px dashed var(--border-industrial);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.scoreboard__title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-main);
+  text-transform: uppercase;
+}
+
+.scoreboard__subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.scoreboard__meta-badge {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--led-green);
+  text-shadow: 0 0 6px var(--led-green-glow);
+  background: rgba(57, 255, 20, 0.08);
+  padding: 0.2rem 0.6rem;
+  border: 1px solid rgba(57, 255, 20, 0.3);
+}
+
+.scoreboard__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.scoreboard__card-counter {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-industrial);
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transition: transform 0.15s ease;
+}
+
+.scoreboard__card-counter:hover {
+  transform: translateY(-2px);
+}
+
+.scoreboard__card-counter--rock {
+  border-bottom: 3px solid var(--card-rock);
+}
+
+.scoreboard__card-counter--paper {
+  border-bottom: 3px solid var(--card-paper);
+}
+
+.scoreboard__card-counter--scissors {
+  border-bottom: 3px solid var(--card-scissors);
+}
+
+.scoreboard__card-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.25rem;
+}
+
+.scoreboard__card-symbol {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.scoreboard__card-number {
+  font-family: var(--font-mono);
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--led-yellow);
+  text-shadow: 0 0 10px var(--led-yellow-glow);
+}
+
+.scoreboard__discard-section {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-industrial);
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.scoreboard__discard-title {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--crimson-alarm);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.scoreboard__discard-items {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.scoreboard__discard-item {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.scoreboard__discard-value {
+  color: var(--text-main);
+  font-weight: 700;
+}

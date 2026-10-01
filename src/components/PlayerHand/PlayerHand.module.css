@@ -1,0 +1,191 @@
+.player-hand {
+  background: var(--bg-surface);
+  border: 2px solid var(--border-industrial);
+  border-left: 5px solid var(--gold-star);
+  padding: 1.25rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+.player-hand__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-industrial);
+}
+
+.player-hand__identity {
+  display: flex;
+  flex-direction: column;
+}
+
+.player-hand__name {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  color: var(--text-main);
+  line-height: 1;
+  letter-spacing: 0.05em;
+}
+
+.player-hand__status {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.player-hand__status--active {
+  color: var(--led-green);
+}
+
+.player-hand__status--qualified {
+  color: var(--gold-star);
+}
+
+.player-hand__status--eliminated {
+  color: var(--crimson-alarm);
+}
+
+.player-hand__assets {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.player-hand__stars {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(255, 183, 3, 0.08);
+  border: 1px solid rgba(255, 183, 3, 0.25);
+  padding: 0.35rem 0.75rem;
+}
+
+.player-hand__star-icon {
+  font-size: 1.25rem;
+  color: var(--gold-star);
+  text-shadow: 0 0 8px var(--gold-glow);
+}
+
+.player-hand__star-count {
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--gold-star);
+}
+
+.player-hand__cards-summary {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.player-hand__cards-total {
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.player-hand__instruction {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--led-yellow);
+  background: rgba(255, 238, 0, 0.08);
+  border-left: 3px solid var(--led-yellow);
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.player-hand__cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.player-hand__card {
+  background: var(--bg-surface-elevated);
+  border: 2px solid var(--border-industrial);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  position: relative;
+  width: 100%;
+}
+
+.player-hand__card:not(:disabled):hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
+}
+
+.player-hand__card:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  filter: grayscale(80%);
+}
+
+.player-hand__card--rock {
+  border-color: rgba(255, 77, 77, 0.4);
+}
+
+.player-hand__card--rock:not(:disabled):hover {
+  border-color: var(--card-rock);
+  box-shadow: 0 0 15px rgba(255, 77, 77, 0.3);
+}
+
+.player-hand__card--paper {
+  border-color: rgba(0, 210, 255, 0.4);
+}
+
+.player-hand__card--paper:not(:disabled):hover {
+  border-color: var(--card-paper);
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+}
+
+.player-hand__card--scissors {
+  border-color: rgba(255, 230, 0, 0.4);
+}
+
+.player-hand__card--scissors:not(:disabled):hover {
+  border-color: var(--card-scissors);
+  box-shadow: 0 0 15px rgba(255, 230, 0, 0.3);
+}
+
+.player-hand__card--selected {
+  outline: 3px solid var(--led-green);
+  outline-offset: 2px;
+  background: rgba(57, 255, 20, 0.12);
+  transform: translateY(-6px);
+  box-shadow: 0 0 20px var(--led-green-glow);
+}
+
+.player-hand__card-symbol {
+  font-size: 2.2rem;
+  margin-bottom: 0.35rem;
+}
+
+.player-hand__card-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  letter-spacing: 0.05em;
+  color: var(--text-main);
+  text-transform: uppercase;
+}
+
+.player-hand__card-count {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.player-hand__card-count-num {
+  color: var(--text-main);
+  font-weight: 700;
+}
