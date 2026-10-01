@@ -113,6 +113,7 @@ export const App: React.FC = () => {
           humanPlayer={humanPlayer}
           opponent={activeOpponent}
           activeDuel={state.activeDuel}
+          onSelectCard={selectPlayerCard}
           onConfirmSelection={confirmDuelSelection}
           onRevealDuel={revealDuel}
           onResolveRound={resolveRound}

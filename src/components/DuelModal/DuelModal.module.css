@@ -198,6 +198,96 @@
   text-shadow: 0 0 10px var(--crimson-glow);
 }
 
+/* ─── Card Picker Grid (inside modal during DUEL_SELECTION) ─── */
+
+.duel-modal__card-picker {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.duel-modal__pick-btn {
+  flex: 1;
+  max-width: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.875rem 0.5rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid var(--border-industrial);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.18s ease;
+}
+
+.duel-modal__pick-btn:not(:disabled):hover {
+  background: rgba(255, 255, 255, 0.09);
+  transform: translateY(-2px);
+}
+
+.duel-modal__pick-btn:disabled {
+  opacity: 0.28;
+  cursor: not-allowed;
+}
+
+.duel-modal__pick-btn--rock {
+  border-color: var(--card-rock);
+}
+
+.duel-modal__pick-btn--rock:not(:disabled):hover,
+.duel-modal__pick-btn--rock.duel-modal__pick-btn--selected {
+  background: rgba(255, 77, 77, 0.15);
+  box-shadow: 0 0 14px rgba(255, 77, 77, 0.5);
+}
+
+.duel-modal__pick-btn--paper {
+  border-color: var(--card-paper);
+}
+
+.duel-modal__pick-btn--paper:not(:disabled):hover,
+.duel-modal__pick-btn--paper.duel-modal__pick-btn--selected {
+  background: rgba(0, 210, 255, 0.12);
+  box-shadow: 0 0 14px rgba(0, 210, 255, 0.45);
+}
+
+.duel-modal__pick-btn--scissors {
+  border-color: var(--card-scissors);
+}
+
+.duel-modal__pick-btn--scissors:not(:disabled):hover,
+.duel-modal__pick-btn--scissors.duel-modal__pick-btn--selected {
+  background: rgba(255, 230, 0, 0.12);
+  box-shadow: 0 0 14px rgba(255, 230, 0, 0.45);
+}
+
+.duel-modal__pick-btn--selected {
+  border-width: 2px;
+  transform: translateY(-3px);
+}
+
+.duel-modal__pick-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.duel-modal__pick-label {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-main);
+}
+
+.duel-modal__pick-count {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* ─── Outcome Banner ─── */
+
 .duel-modal__outcome-banner {
   border: 1px solid var(--border-industrial);
   padding: 1rem;
@@ -255,6 +345,8 @@
   font-size: 0.9rem;
   color: var(--text-main);
 }
+
+/* ─── Action Buttons ─── */
 
 .duel-modal__actions {
   display: flex;

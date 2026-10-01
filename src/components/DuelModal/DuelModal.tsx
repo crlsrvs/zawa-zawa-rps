@@ -12,6 +12,7 @@ export interface DuelModalProps {
   readonly humanPlayer: Participant;
   readonly opponent: Participant;
   readonly activeDuel: DuelState;
+  readonly onSelectCard: (card: CardType) => void;
   readonly onConfirmSelection: () => void;
   readonly onRevealDuel: () => void;
   readonly onResolveRound: () => void;
@@ -34,6 +35,7 @@ export const DuelModal: React.FC<DuelModalProps> = ({
   humanPlayer,
   opponent,
   activeDuel,
+  onSelectCard,
   onConfirmSelection,
   onRevealDuel,
   onResolveRound,
@@ -154,6 +156,38 @@ export const DuelModal: React.FC<DuelModalProps> = ({
           >
             <h3 className={styles['duel-modal__outcome-title']}>{outcomeTitle}</h3>
             <p className={styles['duel-modal__outcome-desc']}>{outcomeDescription}</p>
+          </div>
+        )}
+
+        {/* CARD SELECTION GRID — only shown during DUEL_SELECTION */}
+        {isSelection && (
+          <div className={styles['duel-modal__card-picker']} role="group" aria-label="Select your card">
+            {(
+              [
+                { type: CardType.ROCK, icon: '✊', label: 'Rock' },
+                { type: CardType.PAPER, icon: '✋', label: 'Paper' },
+                { type: CardType.SCISSORS, icon: '✌', label: 'Scissors' },
+              ] as const
+            ).map(({ type, icon, label }) => {
+              const count = humanPlayer.cards[type];
+              const isSelected = playerCard === type;
+              return (
+                <button
+                  key={type}
+                  type="button"
+                  className={`${styles['duel-modal__pick-btn']} ${styles[`duel-modal__pick-btn--${type.toLowerCase()}`]} ${isSelected ? styles['duel-modal__pick-btn--selected'] : ''}`}
+                  disabled={count === 0}
+                  onClick={() => onSelectCard(type)}
+                  aria-pressed={isSelected}
+                  aria-label={`Select ${label}. ${count} remaining.`}
+                  data-testid={`modal-card-${type.toLowerCase()}`}
+                >
+                  <span className={styles['duel-modal__pick-icon']}>{icon}</span>
+                  <span className={styles['duel-modal__pick-label']}>{label}</span>
+                  <span className={styles['duel-modal__pick-count']}>×{count}</span>
+                </button>
+              );
+            })}
           </div>
         )}
 
