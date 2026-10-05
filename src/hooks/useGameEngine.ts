@@ -1,4 +1,4 @@
-import { useReducer, useMemo } from 'react';
+import { useReducer, useMemo } from "react";
 import {
   CardType,
   INITIAL_STARS_PER_PLAYER,
@@ -13,21 +13,24 @@ import {
   type DiscardPool,
   type BotStrategyType,
   type ParticipantStatus,
-} from '../types/game';
+} from "../types/game";
 import {
   calculateRemainingCirculation,
   selectBotCard,
   resolveDuel,
-} from '../logic/botStrategy';
+} from "../logic/botStrategy";
 
-export const BOT_PROFILES: ReadonlyArray<{ name: string; strategy: BotStrategyType }> = [
-  { name: 'Funai (The Trickster)', strategy: 'HOARDER' },
-  { name: 'Ando (The Desperate)', strategy: 'RANDOM' },
-  { name: 'Kitami (The Cartel)', strategy: 'STRATEGIC' },
-  { name: 'Ishida (The Debtor)', strategy: 'RANDOM' },
-  { name: 'Tonegawa (The Executive)', strategy: 'STRATEGIC' },
-  { name: 'Oki (The Survivor)', strategy: 'HOARDER' },
-  { name: 'Hyodo (The Chairman)', strategy: 'STRATEGIC' },
+export const BOT_PROFILES: ReadonlyArray<{
+  name: string;
+  strategy: BotStrategyType;
+}> = [
+  { name: "Funai (The Trickster)", strategy: "HOARDER" },
+  { name: "Ando (The Desperate)", strategy: "RANDOM" },
+  { name: "Kitami (The Cartel)", strategy: "STRATEGIC" },
+  { name: "Ishida (The Debtor)", strategy: "RANDOM" },
+  { name: "Tonegawa (The Executive)", strategy: "STRATEGIC" },
+  { name: "Oki (The Survivor)", strategy: "HOARDER" },
+  { name: "Hyodo (The Chairman)", strategy: "STRATEGIC" },
 ];
 
 /**
@@ -49,35 +52,38 @@ export function createInitialInventory(): CardInventory {
  */
 export function evaluateParticipantStatus(
   cards: CardInventory,
-  stars: number
+  stars: number,
 ): ParticipantStatus {
-  const totalCards = cards[CardType.ROCK] + cards[CardType.PAPER] + cards[CardType.SCISSORS];
+  const totalCards =
+    cards[CardType.ROCK] + cards[CardType.PAPER] + cards[CardType.SCISSORS];
 
   if (stars <= 0) {
-    return 'ELIMINATED';
+    return "ELIMINATED";
   }
 
   if (totalCards === 0) {
-    return stars >= INITIAL_STARS_PER_PLAYER ? 'QUALIFIED' : 'ELIMINATED';
+    return stars >= INITIAL_STARS_PER_PLAYER ? "QUALIFIED" : "ELIMINATED";
   }
 
-  return 'ACTIVE';
+  return "ACTIVE";
 }
 
 /**
  * Initializes a fresh game state.
  */
-export function createInitialGameState(botCount: number = DEFAULT_BOT_COUNT): GameState {
+export function createInitialGameState(
+  botCount: number = DEFAULT_BOT_COUNT,
+): GameState {
   const clampedBots = Math.min(MAX_BOTS, Math.max(MIN_BOTS, botCount));
-  const humanPlayerId = 'human-player';
+  const humanPlayerId = "human-player";
 
   const humanPlayer: Participant = {
     id: humanPlayerId,
-    name: 'Kaiji Itou (You)',
+    name: "Kaiji Itou (You)",
     isHuman: true,
     stars: INITIAL_STARS_PER_PLAYER,
     cards: createInitialInventory(),
-    status: 'ACTIVE',
+    status: "ACTIVE",
   };
 
   const participants: Record<string, Participant> = {
@@ -94,7 +100,7 @@ export function createInitialGameState(botCount: number = DEFAULT_BOT_COUNT): Ga
       isHuman: false,
       stars: INITIAL_STARS_PER_PLAYER,
       cards: createInitialInventory(),
-      status: 'ACTIVE',
+      status: "ACTIVE",
       botStrategy: profile.strategy,
     };
     participantOrder.push(botId);
@@ -107,7 +113,7 @@ export function createInitialGameState(botCount: number = DEFAULT_BOT_COUNT): Ga
   };
 
   return {
-    phase: 'LOBBY',
+    phase: "LOBBY",
     humanPlayerId,
     participants,
     participantOrder,
@@ -124,21 +130,23 @@ export function createInitialGameState(botCount: number = DEFAULT_BOT_COUNT): Ga
  */
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
-    case 'INIT_GAME': {
-      return createInitialGameState(action.payload?.botCount ?? DEFAULT_BOT_COUNT);
+    case "INIT_GAME": {
+      return createInitialGameState(
+        action.payload?.botCount ?? DEFAULT_BOT_COUNT,
+      );
     }
 
-    case 'SELECT_OPPONENT': {
-      if (state.phase !== 'LOBBY') return state;
+    case "SELECT_OPPONENT": {
+      if (state.phase !== "LOBBY") return state;
 
       const opponent = state.participants[action.payload.opponentId];
-      if (!opponent || opponent.isHuman || opponent.status !== 'ACTIVE') {
+      if (!opponent || opponent.isHuman || opponent.status !== "ACTIVE") {
         return state;
       }
 
       return {
         ...state,
-        phase: 'DUEL_SELECTION',
+        phase: "DUEL_SELECTION",
         activeDuel: {
           opponentId: opponent.id,
           playerCard: null,
@@ -149,17 +157,17 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
-    case 'CANCEL_DUEL': {
-      if (state.phase !== 'DUEL_SELECTION') return state;
+    case "CANCEL_DUEL": {
+      if (state.phase !== "DUEL_SELECTION") return state;
       return {
         ...state,
-        phase: 'LOBBY',
+        phase: "LOBBY",
         activeDuel: null,
       };
     }
 
-    case 'SELECT_PLAYER_CARD': {
-      if (state.phase !== 'DUEL_SELECTION' || !state.activeDuel) return state;
+    case "SELECT_PLAYER_CARD": {
+      if (state.phase !== "DUEL_SELECTION" || !state.activeDuel) return state;
 
       const human = state.participants[state.humanPlayerId];
       if (!human || human.cards[action.payload.card] <= 0) {
@@ -175,9 +183,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
-    case 'CONFIRM_DUEL_SELECTION': {
+    case "CONFIRM_DUEL_SELECTION": {
       if (
-        state.phase !== 'DUEL_SELECTION' ||
+        state.phase !== "DUEL_SELECTION" ||
         !state.activeDuel ||
         !state.activeDuel.playerCard
       ) {
@@ -194,14 +202,14 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         // Fallback: If bot somehow has no cards, abort to lobby
         return {
           ...state,
-          phase: 'LOBBY',
+          phase: "LOBBY",
           activeDuel: null,
         };
       }
 
       return {
         ...state,
-        phase: 'DUEL_REVEAL',
+        phase: "DUEL_REVEAL",
         activeDuel: {
           ...state.activeDuel,
           opponentCard: botCard,
@@ -209,9 +217,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
-    case 'REVEAL_DUEL': {
+    case "REVEAL_DUEL": {
       if (
-        state.phase !== 'DUEL_REVEAL' ||
+        state.phase !== "DUEL_REVEAL" ||
         !state.activeDuel ||
         !state.activeDuel.playerCard ||
         !state.activeDuel.opponentCard
@@ -252,14 +260,20 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         ...human,
         stars: duelResult.stars.player,
         cards: updatedHumanCards,
-        status: evaluateParticipantStatus(updatedHumanCards, duelResult.stars.player),
+        status: evaluateParticipantStatus(
+          updatedHumanCards,
+          duelResult.stars.player,
+        ),
       };
 
       const updatedBot: Participant = {
         ...opponent,
         stars: duelResult.stars.bot,
         cards: updatedBotCards,
-        status: evaluateParticipantStatus(updatedBotCards, duelResult.stars.bot),
+        status: evaluateParticipantStatus(
+          updatedBotCards,
+          duelResult.stars.bot,
+        ),
       };
 
       const updatedParticipants: Record<string, Participant> = {
@@ -270,7 +284,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
       return {
         ...state,
-        phase: 'ROUND_RESOLVE',
+        phase: "ROUND_RESOLVE",
         participants: updatedParticipants,
         discardPool: updatedDiscardPool,
         activeDuel: {
@@ -281,31 +295,32 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
-    case 'RESOLVE_ROUND': {
-      if (state.phase !== 'ROUND_RESOLVE') return state;
+    case "RESOLVE_ROUND": {
+      if (state.phase !== "ROUND_RESOLVE") return state;
 
       const human = state.participants[state.humanPlayerId];
       if (!human) return state;
 
       // Check if human player is already done (QUALIFIED or ELIMINATED)
-      const isHumanFinished = human.status === 'QUALIFIED' || human.status === 'ELIMINATED';
+      const isHumanFinished =
+        human.status === "QUALIFIED" || human.status === "ELIMINATED";
 
       // Check if any active bots remain with both cards and stars
       const activeBotsCount = Object.values(state.participants).filter(
-        (p) => !p.isHuman && p.status === 'ACTIVE'
+        (p) => !p.isHuman && p.status === "ACTIVE",
       ).length;
 
       const shouldEndGame = isHumanFinished || activeBotsCount === 0;
 
       return {
         ...state,
-        phase: shouldEndGame ? 'GAME_OVER' : 'LOBBY',
+        phase: shouldEndGame ? "GAME_OVER" : "LOBBY",
         activeDuel: null,
         roundCount: state.roundCount + 1,
       };
     }
 
-    case 'RESTART_GAME': {
+    case "RESTART_GAME": {
       const currentBotCount = state.participantOrder.length - 1;
       return createInitialGameState(currentBotCount);
     }
@@ -322,7 +337,7 @@ export function useGameEngine(initialBotCount: number = DEFAULT_BOT_COUNT) {
   const [state, dispatch] = useReducer(
     gameReducer,
     initialBotCount,
-    createInitialGameState
+    createInitialGameState,
   );
 
   const humanPlayer = state.participants[state.humanPlayerId]!;
@@ -338,7 +353,7 @@ export function useGameEngine(initialBotCount: number = DEFAULT_BOT_COUNT) {
 
   const activeBots = useMemo(() => {
     return Object.values(state.participants).filter(
-      (p) => !p.isHuman && p.status === 'ACTIVE'
+      (p) => !p.isHuman && p.status === "ACTIVE",
     );
   }, [state.participants]);
 
@@ -349,7 +364,10 @@ export function useGameEngine(initialBotCount: number = DEFAULT_BOT_COUNT) {
   }, [state.participantOrder, state.participants, state.humanPlayerId]);
 
   const totalActiveStars = useMemo(() => {
-    return Object.values(state.participants).reduce((sum, p) => sum + p.stars, 0);
+    return Object.values(state.participants).reduce(
+      (sum, p) => sum + p.stars,
+      0,
+    );
   }, [state.participants]);
 
   const totalRemainingCards = useMemo(() => {
@@ -375,15 +393,16 @@ export function useGameEngine(initialBotCount: number = DEFAULT_BOT_COUNT) {
     totalRemainingCards,
     totalBurnedCards,
     // Action creators
-    initGame: (botCount?: number) => dispatch({ type: 'INIT_GAME', payload: { botCount } }),
+    initGame: (botCount?: number) =>
+      dispatch({ type: "INIT_GAME", payload: { botCount } }),
     selectOpponent: (opponentId: string) =>
-      dispatch({ type: 'SELECT_OPPONENT', payload: { opponentId } }),
+      dispatch({ type: "SELECT_OPPONENT", payload: { opponentId } }),
     selectPlayerCard: (card: CardType) =>
-      dispatch({ type: 'SELECT_PLAYER_CARD', payload: { card } }),
-    cancelDuel: () => dispatch({ type: 'CANCEL_DUEL' }),
-    confirmDuelSelection: () => dispatch({ type: 'CONFIRM_DUEL_SELECTION' }),
-    revealDuel: () => dispatch({ type: 'REVEAL_DUEL' }),
-    resolveRound: () => dispatch({ type: 'RESOLVE_ROUND' }),
-    restartGame: () => dispatch({ type: 'RESTART_GAME' }),
+      dispatch({ type: "SELECT_PLAYER_CARD", payload: { card } }),
+    cancelDuel: () => dispatch({ type: "CANCEL_DUEL" }),
+    confirmDuelSelection: () => dispatch({ type: "CONFIRM_DUEL_SELECTION" }),
+    revealDuel: () => dispatch({ type: "REVEAL_DUEL" }),
+    resolveRound: () => dispatch({ type: "RESOLVE_ROUND" }),
+    restartGame: () => dispatch({ type: "RESTART_GAME" }),
   };
 }
