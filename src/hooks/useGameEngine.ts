@@ -83,6 +83,7 @@ export function createInitialGameState(
     isHuman: true,
     stars: INITIAL_STARS_PER_PLAYER,
     cards: createInitialInventory(),
+    status: "ACTIVE",
   };
 
   const participants: Record<string, Participant> = {
