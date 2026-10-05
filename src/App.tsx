@@ -7,6 +7,7 @@ import { DuelModal } from './components/DuelModal/DuelModal';
 import styles from './App.module.css';
 
 export const App: React.FC = () => {
+  const intentionalLintError = 'intentional lint error';
   const [configuredBots, setConfiguredBots] = useState<number>(5);
 
   const {
