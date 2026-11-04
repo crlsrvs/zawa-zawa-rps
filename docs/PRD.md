@@ -1,5 +1,14 @@
 # Zawa Zawa RPS - Project Prompt
 
+Este documento conserva el planteamiento inicial. La versión preliminar 0.1.0 (alfa) se cerró el 4 de noviembre de 2026; consulta [STATUS.md](STATUS.md) para el estado verificado y [AGENTS.md](../AGENTS.md) para las reglas operativas.
+
+### Ajustes de alcance de la alfa
+
+- El motor admite de 1 a 7 bots; la interfaz ofrece 1, 3, 5 o 7.
+- Si no quedan oponentes activos y el humano aún tiene cartas, la partida termina sin clasificación con el motivo `NO_OPPONENTS`. No equivale a haber perdido todas sus cartas o estrellas.
+- Se descartan dos cartas por duelo, también en empate. La victoria o eliminación personal tiene prioridad sobre el cierre por falta de rivales.
+- El comercio y el guardado de partidas quedan fuera de esta versión. La ayuda integrada explica las reglas y los reinicios.
+
 Crea una aplicación web interactiva en React + TypeScript estructurada con Vite, llamada "Zawa Zawa RPS" (Piedra, Papel o Tijera Restringido), inspirada en el juego del barco Espoir del anime Kaiji.
 
 ### 1. Stack, Restricciones y Estilos

@@ -1,6 +1,8 @@
 
 ## Definidas
 
+Notas de referencia. [AGENTS.md](../AGENTS.md) contiene las convenciones obligatorias; [STATUS.md](STATUS.md) describe el estado real de la alfa.
+
 - Conventional Commits
 	- https://www.conventionalcommits.org/en/v1.0.0/
 
@@ -25,7 +27,7 @@
 			    
 	- **SCREAMING_SNAKE_CASE:** Constantes globales y variables de entorno (`MAX_RETRY_COUNT`).
 
-- Archivos Estándar de Raíz:
+- Archivos de documentación de referencia (solo `README.md` existe actualmente entre los siguientes; los demás son propuestas para futuras necesidades):
 	- `README.md`: Setup inicial, arquitectura básica y comandos principales.
 	    
 	- `CONTRIBUTING.md`: Guías para enviar PRs, ejecutar tests y seguir las convenciones.
