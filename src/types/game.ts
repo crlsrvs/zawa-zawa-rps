@@ -36,6 +36,8 @@ export type GamePhase =
 
 export type DuelOutcome = 'PLAYER_WIN' | 'BOT_WIN' | 'TIE';
 
+export type GameOverReason = 'QUALIFIED' | 'NO_STARS' | 'INSUFFICIENT_STARS' | 'NO_OPPONENTS';
+
 export interface DuelState {
   readonly opponentId: string;
   readonly playerCard: CardType | null;
@@ -58,6 +60,7 @@ export interface GameState {
   readonly discardPool: DiscardPool;
   readonly activeDuel: DuelState | null;
   readonly roundCount: number;
+  readonly gameOverReason: GameOverReason | null;
 }
 
 export type GameAction =

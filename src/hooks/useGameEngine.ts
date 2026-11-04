@@ -13,6 +13,7 @@ import {
   type DiscardPool,
   type BotStrategyType,
   type ParticipantStatus,
+  type GameOverReason,
 } from '../types/game';
 import {
   calculateRemainingCirculation,
@@ -114,6 +115,7 @@ export function createInitialGameState(botCount: number = DEFAULT_BOT_COUNT): Ga
     discardPool,
     activeDuel: null,
     roundCount: 1,
+    gameOverReason: null,
   };
 }
 
@@ -242,11 +244,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         [botCard]: Math.max(0, opponent.cards[botCard] - 1),
       };
 
-      const updatedDiscardPool: DiscardPool = {
-        ...state.discardPool,
-        [playerCard]: state.discardPool[playerCard] + 1,
-        [botCard]: state.discardPool[botCard] + 1,
-      };
+      const updatedDiscardPool = [playerCard, botCard].reduce<DiscardPool>(
+        (pool, card) => ({ ...pool, [card]: pool[card] + 1 }),
+        state.discardPool
+      );
 
       const updatedHuman: Participant = {
         ...human,
@@ -287,19 +288,22 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const human = state.participants[state.humanPlayerId];
       if (!human) return state;
 
-      // Check if human player is already done (QUALIFIED or ELIMINATED)
-      const isHumanFinished = human.status === 'QUALIFIED' || human.status === 'ELIMINATED';
-
       // Check if any active bots remain with both cards and stars
       const activeBotsCount = Object.values(state.participants).filter(
         (p) => !p.isHuman && p.status === 'ACTIVE'
       ).length;
 
-      const shouldEndGame = isHumanFinished || activeBotsCount === 0;
+      // Personal qualification/elimination takes precedence over exhausting opponents.
+      const gameOverReason: GameOverReason | null =
+        human.status === 'QUALIFIED' ? 'QUALIFIED'
+          : human.stars <= 0 ? 'NO_STARS'
+            : human.status === 'ELIMINATED' ? 'INSUFFICIENT_STARS'
+              : activeBotsCount === 0 ? 'NO_OPPONENTS' : null;
 
       return {
         ...state,
-        phase: shouldEndGame ? 'GAME_OVER' : 'LOBBY',
+        phase: gameOverReason ? 'GAME_OVER' : 'LOBBY',
+        gameOverReason,
         activeDuel: null,
         roundCount: state.roundCount + 1,
       };

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { CardType } from '../types/game';
+import { CardType, type GameState } from '../types/game';
 import {
   useGameEngine,
   gameReducer,
@@ -125,6 +125,81 @@ describe('gameReducer FSM lifecycle', () => {
     // Assert
     expect(state.phase).toBe('LOBBY');
     expect(state.activeDuel).toBeNull();
+  });
+});
+
+describe('card conservation and game endings', () => {
+  it.each([CardType.ROCK, CardType.PAPER, CardType.SCISSORS])('burns both %s cards on a tie exactly once', (card) => {
+    // Arrange
+    const initial = createInitialGameState(1);
+    const before: GameState = {
+      ...initial,
+      phase: 'DUEL_REVEAL',
+      discardPool: { ROCK: 2, PAPER: 2, SCISSORS: 2 },
+      participants: Object.fromEntries(Object.entries(initial.participants).map(([id, participant]) => [
+        id, { ...participant, cards: { ROCK: 3, PAPER: 3, SCISSORS: 3 } },
+      ])),
+      activeDuel: { opponentId: 'bot-1', playerCard: card, opponentCard: card, outcome: null, starsExchanged: 0 },
+    };
+
+    // Act
+    const after = gameReducer(before, { type: 'REVEAL_DUEL' });
+    const duplicate = gameReducer(after, { type: 'REVEAL_DUEL' });
+
+    // Assert
+    expect(after.discardPool[card]).toBe(4);
+    expect(after.participants['human-player']?.cards[card]).toBe(2);
+    expect(after.participants['bot-1']?.cards[card]).toBe(2);
+    expect(Object.values(after.discardPool).reduce((sum, count) => sum + count, 0)).toBe(8);
+    const totalCards = (state: GameState) => Object.values(state.participants)
+      .reduce((sum, participant) => sum + Object.values(participant.cards).reduce((total, count) => total + count, 0), 0)
+      + Object.values(state.discardPool).reduce((sum, count) => sum + count, 0);
+    expect(totalCards(after)).toBe(totalCards(before));
+    expect(totalCards(after)).toBe(24);
+    expect(after.participants['human-player']?.stars).toBe(3);
+    expect(after.participants['bot-1']?.stars).toBe(3);
+    expect(duplicate).toBe(after);
+    expect(before.discardPool[card]).toBe(2);
+  });
+
+  it.each([
+    { reason: 'QUALIFIED', humanStars: 3, humanRock: 1, botStars: 3, botCards: { ROCK: 1, PAPER: 0, SCISSORS: 0 }, botCard: CardType.ROCK, status: 'QUALIFIED' },
+    { reason: 'NO_STARS', humanStars: 1, humanRock: 4, botStars: 3, botCards: { ROCK: 0, PAPER: 4, SCISSORS: 0 }, botCard: CardType.PAPER, status: 'ELIMINATED' },
+    { reason: 'INSUFFICIENT_STARS', humanStars: 2, humanRock: 1, botStars: 3, botCards: { ROCK: 1, PAPER: 0, SCISSORS: 0 }, botCard: CardType.ROCK, status: 'ELIMINATED' },
+    { reason: 'NO_OPPONENTS', humanStars: 5, humanRock: 4, botStars: 1, botCards: { ROCK: 0, PAPER: 0, SCISSORS: 4 }, botCard: CardType.SCISSORS, status: 'ACTIVE' },
+  ])('records $reason after the final duel and clears it on restart', ({ reason, humanStars, humanRock, botStars, botCards, botCard, status }) => {
+    // Arrange
+    const initial = createInitialGameState(1);
+    const human = initial.participants['human-player']!;
+    const bot = initial.participants['bot-1']!;
+    const before: GameState = {
+      ...initial,
+      phase: 'DUEL_REVEAL',
+      participants: {
+        [human.id]: { ...human, stars: humanStars, cards: { ROCK: humanRock, PAPER: 0, SCISSORS: 0 } },
+        [bot.id]: { ...bot, stars: botStars, cards: botCards },
+      },
+      activeDuel: { opponentId: bot.id, playerCard: CardType.ROCK, opponentCard: botCard, outcome: null, starsExchanged: 0 },
+    };
+
+    // Act
+    const revealed = gameReducer(before, { type: 'REVEAL_DUEL' });
+    const finished = gameReducer(revealed, { type: 'RESOLVE_ROUND' });
+
+    // Assert
+    expect(revealed.phase).toBe('ROUND_RESOLVE');
+    expect(finished.phase).toBe('GAME_OVER');
+    expect(finished.gameOverReason).toBe(reason);
+    expect(finished.participants[human.id]?.status).toBe(status);
+    expect(finished.activeDuel).toBeNull();
+    expect(gameReducer(finished, { type: 'SELECT_OPPONENT', payload: { opponentId: bot.id } })).toBe(finished);
+
+    // Act
+    const restarted = gameReducer(finished, { type: 'RESTART_GAME' });
+
+    // Assert
+    expect(restarted).toEqual(createInitialGameState(1));
+    expect(restarted.gameOverReason).toBeNull();
   });
 });
 

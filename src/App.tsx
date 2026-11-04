@@ -5,6 +5,7 @@ import { PlayerHand } from './components/PlayerHand/PlayerHand';
 import { LobbyGrid } from './components/LobbyGrid/LobbyGrid';
 import { DuelModal } from './components/DuelModal/DuelModal';
 import styles from './App.module.css';
+import type { GameOverReason } from './types/game';
 
 export const App: React.FC = () => {
   const [configuredBots, setConfiguredBots] = useState<number>(5);
@@ -37,6 +38,26 @@ export const App: React.FC = () => {
   };
 
   const isHumanQualified = humanPlayer.status === 'QUALIFIED';
+  const remainingCards = Object.values(humanPlayer.cards).reduce((sum, count) => sum + count, 0);
+  const gameOverMessages: Record<GameOverReason, { title: string; description: string }> = {
+    QUALIFIED: {
+      title: 'SURVIVOR OF THE ESPOIR',
+      description: `You successfully burned all 12 cards while securing ${humanPlayer.stars} Stars! Your debts have been cleared.`,
+    },
+    NO_STARS: {
+      title: 'CONSIGNED TO THE UNDERGROUND',
+      description: 'All stars were seized by your opponents. You are sent to the Teiai subterranean labor camp.',
+    },
+    INSUFFICIENT_STARS: {
+      title: 'CONSIGNED TO THE UNDERGROUND',
+      description: 'You ran out of cards with fewer than 3 stars. You failed to qualify for freedom.',
+    },
+    NO_OPPONENTS: {
+      title: 'NO OPPONENTS REMAIN',
+      description: `No active opponents remain. You still hold ${remainingCards} cards and ${humanPlayer.stars} stars. You cannot burn your remaining cards, so the game ends without qualification.`,
+    },
+  };
+  const gameOverMessage = state.gameOverReason ? gameOverMessages[state.gameOverReason] : null;
 
   return (
     <div className={styles.app}>
@@ -81,6 +102,19 @@ export const App: React.FC = () => {
       </header>
 
       <main className={styles.app__main}>
+        <details className={styles.app__help}>
+          <summary className={styles['app__help-summary']}>How to play · Espoir rules</summary>
+          <div className={styles['app__help-content']}>
+            <p>Start with 12 cards (4 Rock, 4 Paper, 4 Scissors) and 3 stars. Challenge an active opponent, choose a card, lock it in, then reveal.</p>
+            <ul>
+              <li>Rock beats Scissors, Scissors beats Paper, and Paper beats Rock. The winner takes 1 star; a tie transfers none. Both cards are burned, even on a tie.</li>
+              <li>Qualify by burning all 12 cards while keeping at least 3 stars. Lose immediately at 0 stars, or finish without qualification if you run out of cards with fewer than 3 stars.</li>
+              <li>If no active opponents remain while you still hold cards, the game ends without qualification. Plan your challenges carefully.</li>
+              <li>The ledger counts cards held by active players. Bots only duel when challenged; trading is not available in this version.</li>
+            </ul>
+            <p>Changing the opponent count, using Reset Floor, or reloading starts a new game. Progress is not saved.</p>
+          </div>
+        </details>
         {/* Global Market Scoreboard */}
         <Scoreboard
           circulation={circulation}
@@ -122,8 +156,8 @@ export const App: React.FC = () => {
       )}
 
       {/* Game Over Screen */}
-      {isGameOver && (
-        <div className={styles['app__gameover-backdrop']} role="alertdialog" aria-modal="true">
+      {isGameOver && gameOverMessage && (
+        <div className={styles['app__gameover-backdrop']} role="alertdialog" aria-modal="true" aria-labelledby="gameover-title" aria-describedby="gameover-description">
           <div
             className={`${styles['app__gameover-modal']} ${
               isHumanQualified
@@ -138,19 +172,15 @@ export const App: React.FC = () => {
                   : styles['app__gameover-badge--eliminated']
               }`}
             >
-              {isHumanQualified ? 'MISSION COMPLETE // 生還' : 'CONTRACT TERMINATED // 脱落'}
+              {isHumanQualified ? 'MISSION COMPLETE // 生還' : state.gameOverReason === 'NO_OPPONENTS' ? 'FLOOR CLOSED // NOT QUALIFIED' : 'CONTRACT TERMINATED // 脱落'}
             </div>
 
-            <h2 className={styles['app__gameover-title']}>
-              {isHumanQualified ? 'SURVIVOR OF THE ESPOIR' : 'CONSIGNED TO THE UNDERGROUND'}
+            <h2 id="gameover-title" className={styles['app__gameover-title']}>
+              {gameOverMessage.title}
             </h2>
 
-            <p className={styles['app__gameover-desc']}>
-              {isHumanQualified
-                ? `You successfully burned all 12 cards while securing ${humanPlayer.stars} Stars! Your debts have been cleared.`
-                : humanPlayer.stars <= 0
-                  ? 'All stars were seized by your opponents. You are sent to the Teiai subterranean labor camp.'
-                  : 'You ran out of cards with fewer than 3 stars. You failed to qualify for freedom.'}
+            <p id="gameover-description" className={styles['app__gameover-desc']}>
+              {gameOverMessage.description}
             </p>
 
             <button
