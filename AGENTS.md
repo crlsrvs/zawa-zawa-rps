@@ -8,7 +8,7 @@
 
 - **Project Name:** Zawa Zawa RPS (*Restricted Rock-Paper-Scissors* / *Piedra, Papel o Tijera Restringido*)
 - **Inspiration:** The Espoir gambling ship arc from the manga/anime *Kaiji*.
-- **Concept:** Local high-stakes tactical card-trading game where 1 human player duels against 1 to 7 configurable AI bots.
+- **Concept:** Local tactical duel game where 1 human player faces AI bots. The engine supports 1 to 7 bots; the alpha UI offers 1, 3, 5 or 7. Trading is deferred to a future iteration.
 - **Visual Aesthetic:** Dark Industrial Kaiji.
   - Palette: Asphalt grey / deep black (`#0d0d0d`, `#1a1a1a`), alarm crimson accent (`#e60000`), gamble star gold (`#ffb703`), digital LED yellow/neon green (`#39ff14`).
   - Tone: Tense, mechanical, high-contrast, atmospheric.
@@ -46,7 +46,7 @@ npm run dev
 npm run build
 
 # Type checking (TypeScript strict verification)
-npm run typecheck      # or: npx tsc --noEmit
+npm run typecheck      # checks both app and Node project configurations
 
 # Static code analysis (Linter)
 npm run lint
@@ -57,6 +57,8 @@ npm test               # or: npx vitest run
 # Run a single test file (Atomic verification)
 npx vitest run src/path/to/target.spec.ts
 ```
+
+Do not substitute bare `npx tsc --noEmit`: the root configuration has no files and only references the two project configurations. Run `npm run typecheck` to check both.
 
 ---
 
@@ -118,6 +120,9 @@ State **must** be implemented via `useReducer` in `src/hooks/useGameEngine.ts`.
 - **Victory Condition (`QUALIFIED`):** 0 cards remaining in hand **AND** at least 3 stars.
 - **Defeat Condition (`ELIMINATED`):** 0 stars at any moment **OR** 0 cards remaining with fewer than 3 stars.
 - **Card Burning:** Cards played during duels are permanently removed from hands and counted in the global discard pool.
+- **Ties:** Both played cards must be counted in discard, including when they have the same type.
+- **No Opponents:** If the human still has cards but no active bots remain, end the game without qualification using `gameOverReason: 'NO_OPPONENTS'`. This match-ending reason does not change the human's participant status to `ELIMINATED` or imply that their cards or stars are zero.
+- **Ending Precedence:** Personal qualification or elimination takes precedence over running out of opponents. The four ending reasons are `QUALIFIED`, `NO_STARS`, `INSUFFICIENT_STARS`, and `NO_OPPONENTS`.
 
 ### 4.3 Bot AI Engine (`src/logic/botStrategy.ts`)
 Bots must execute distinct, testable decision-making algorithms:
@@ -176,6 +181,7 @@ describe('resolveDuel', () => {
 - **Conventional Commits**: Enforce commit message format (`feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`).
 - **SemVer**: Strictly follow Semantic Versioning (`MAJOR.MINOR.PATCH`).
 - **GitHub Flow**: Branch from `main`, implement feature/fix, verify clean test runs, open PR.
+- **Protected Main**: Wait for the required `build` check and merge the PR. A merge into `main` triggers the Pages deployment; confirm its result separately from CI.
 
 ---
 
@@ -198,7 +204,7 @@ Before marking any task, feature, or bug fix as complete, every AI agent must ex
 
 2. **Verify**:
    - Execute in strict sequence:
-     1. Type check: `npm run typecheck` (or `npx tsc --noEmit`)
+     1. Type check: `npm run typecheck`
      2. Linter: `npm run lint`
      3. Tests: `npm test` or `npx vitest run <path-to-modified-spec>`
 

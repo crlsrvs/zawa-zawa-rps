@@ -1,21 +1,15 @@
 
-Al trabajar con **agentes de IA y asistentes de código** (como Claude Code, Cursor, Copilot o Gemini CLI), la precisión del contexto y la previsibilidad de la arquitectura son fundamentales. Las IAs no sufren por sintaxis compleja, pero sí se "pierden" o generan alucinaciones si la base de código es ambigua, inconsistente o carece de límites claros.
+Estas notas complementan [AGENTS.md](../AGENTS.md), la única autoridad operativa del proyecto. Los ejemplos de ADRs o contratos de API son opciones para futuras necesidades, no componentes ya implementados ni requisitos adicionales de la alfa.
 
 A continuación, las convenciones más críticas para maximizar el rendimiento de un agente de IA:
 
-## 1. Archivos de Contexto y Reglas Rápidas (`.cursor/rules/*.mdc`, `CLAUDE.md`, etc.)
+## 1. Contexto y reglas en `AGENTS.md`
 
-Es la convención más importante hoy en día. Consiste en definir un archivo de reglas en la raíz del proyecto para indicarle a la IA cómo debe comportarse, qué convenciones seguir y qué comandos ejecutar.
+El archivo raíz `AGENTS.md` define las restricciones, la arquitectura, las convenciones y los comandos de verificación.
 
-- **¿Qué incluir?** Comandos frecuentes para correr tests, linter, estilos de formateo, bibliotecas preferidas y patrones prohibidos (ej. _"No uses `any` en TypeScript"_, _"Usa Tailwind v4 para estilos"_).
+- **¿Qué incluir?** Comandos de tests y linter, reglas de estilo y patrones prohibidos. En este proyecto se usan TypeScript estricto y CSS Modules nativo con BEM; no se permite Tailwind ni bibliotecas de componentes de UI.
     
-- **Convención estándar:**
-    
-    - `CLAUDE.md` para Claude Code.
-        
-    - `.cursorrules` o `.cursor/rules/` para Cursor.
-        
-    - `AGENT.md` / `CONTRIBUTING.md` para agentes genéricos.
+- **Fuente única:** mantener las reglas operativas en `AGENTS.md`, sin crear archivos o directorios de reglas específicos de un proveedor.
         
 
 ## 2. ADRs (Architectural Decision Records)
@@ -49,9 +43,9 @@ Los agentes modernos trabajan en bucles de retroalimentación: **escriben códig
 
 ## 6. Loop de feedback determinista
 
-Para cerrar el ciclo y lograr que el agente valide de forma autónoma antes de dar por terminada la tarea, el archivo de contexto (`CLAUDE.md`, `.cursorrules` o reglas de agente) debe definir con precisión la **fase de verificación determinista**.
+Para validar de forma autónoma antes de dar por terminada la tarea, `AGENTS.md` define la fase de verificación determinista.
 
-En la sección de comandos del archivo de contexto (`CLAUDE.md` / `.cursorrules`), se deben definir tres bloques fundamentales:
+Las siguientes pautas remiten a los comandos y al flujo de `AGENTS.md`:
 
 ### 1. Comandos Rápidos de Verificación (Verification Commands)
 
@@ -60,9 +54,9 @@ Documenta los comandos exactos y atómicos. Es útil separar el chequeo rápido 
 ```bash
 ## Verification Commands
 
-- **Typecheck:** `npm run typecheck` (o `npx tsc --noEmit`)
+- **Typecheck:** `npm run typecheck` (revisa las configuraciones de app y Node)
 - **Lint:** `npm run lint`
-- **Unit Tests:** `npm test -- --selectProjects unit`
+- **Unit Tests:** `npm test`
 - **Single Test File:** `npx vitest run path/to/file.spec.ts`
 ```
 
