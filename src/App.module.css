@@ -96,6 +96,37 @@
   flex: 1;
 }
 
+.app__help {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-industrial);
+  padding: 0.85rem 1rem;
+}
+
+.app__help-summary {
+  color: var(--gold-star);
+  cursor: pointer;
+  font-family: var(--font-mono);
+}
+
+.app__help-summary:focus-visible {
+  outline: 2px solid var(--crimson-alarm);
+  outline-offset: 4px;
+}
+
+.app__help-content {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.app__help-content ul {
+  padding-left: 1.25rem;
+}
+
+.app__help-content li + li {
+  margin-top: 0.5rem;
+}
+
 .app__gameover-backdrop {
   position: fixed;
   inset: 0;
@@ -116,7 +147,9 @@
   padding: 2.5rem;
   text-align: center;
   position: relative;
-  overflow: hidden;
+  max-height: calc(100dvh - 3rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
 }
 
@@ -190,4 +223,25 @@
 .app__gameover-btn:hover {
   background: #ff1a1a;
   transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+  .app {
+    padding: 1rem;
+  }
+
+  .app__config-bar {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    max-width: 100%;
+  }
+
+  .app__gameover-modal {
+    padding: 1.25rem;
+  }
+
+  .app__gameover-title {
+    font-size: 2.5rem;
+    overflow-wrap: anywhere;
+  }
 }

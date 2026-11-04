@@ -24,7 +24,9 @@
   width: 100%;
   max-width: 680px;
   position: relative;
-  overflow: hidden;
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 1.5rem;
 }
 
@@ -405,4 +407,35 @@
 
 .duel-modal__btn--reveal:hover {
   background: #fff033;
+}
+
+@media (max-width: 480px) {
+  .duel-modal {
+    padding: 1rem;
+  }
+
+  .duel-modal__table {
+    gap: 0.25rem;
+    padding: 1rem 0.5rem;
+  }
+
+  .duel-modal__participant {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .duel-modal__card-slot {
+    width: min(100%, 90px);
+    height: 130px;
+  }
+
+  .duel-modal__actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .duel-modal__btn {
+    width: 100%;
+    padding: 0.75rem;
+  }
 }
